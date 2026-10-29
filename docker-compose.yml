@@ -1,0 +1,21 @@
+services:
+  weatherstar:
+    image: ghcr.io/mwood77/ws4kp-international:latest
+    restart: unless-stopped
+    expose:
+      - "8080"
+
+  iptv:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - weatherstar
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      BASE_URL: ${APP_URL}
+      WS4KP_URL: ${WS4KP_URL:-http://weatherstar:8080/?kiosk=true}
+      WIDTH: "1280"
+      HEIGHT: "720"
+      FPS: "10"
+      VIDEO_BITRATE: "2000k"
